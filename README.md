@@ -1,4 +1,4 @@
-# CLTVPrediction
+# CLTV Prediction
 Create 1,6 and 12 months of CLTV predictions from Online Retail II dataset using BG-NDB and Gamma Gamma models.
 
 Segmenting the costumers based on their CLTV scores.

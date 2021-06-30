@@ -16,12 +16,12 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 500)
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
-
+#Read file
 df_ = pd.read_excel('Datasets/online_retail_II.xlsx', sheet_name="Year 2010-2011")
 df_.head()
 df = df_.copy()
 
-
+#Define a function to find outlier thresholds.
 def outlier_thresholds(dataframe, variable):
     quartile1 = dataframe[variable].quantile(0.01)
     quartile3 = dataframe[variable].quantile(0.99)
@@ -30,21 +30,16 @@ def outlier_thresholds(dataframe, variable):
     low_limit = quartile1 - 1.5 * interquantile_range
     return low_limit, up_limit
 
-
+#Define a function to replace outliers with thresholds
 def replace_with_thresholds(dataframe, variable):
     low_limit, up_limit = outlier_thresholds(dataframe, variable)
     dataframe.loc[(dataframe[variable] < low_limit), variable] = low_limit
     dataframe.loc[(dataframe[variable] > up_limit), variable] = up_limit
 
-#Read dataframe
-df_ = pd.read_excel('Datasets/online_retail_II.xlsx', sheet_name="Year 2010-2011")
-df_.head()
-df = df_.copy()
-
 #Selecting UK customers only to reduce processing time
 df = df[df["Country"] == "United Kingdom"]
 
-#Data pre-processing
+#Data pre-processing#
 df.describe().T
 
 df.shape
@@ -103,6 +98,12 @@ cltv_df["expected_purc_1_month"] = bgf.predict(4,
 
 #1 week expected purchase
 cltv_df["expected_purc_1_week"] = bgf.predict(1,
+                                               cltv_df['frequency'],
+                                               cltv_df['recency'],
+                                               cltv_df['T'])
+
+#6 months expected purchase
+cltv_df["expected_purc_6_month"] = bgf.predict(24,
                                                cltv_df['frequency'],
                                                cltv_df['recency'],
                                                cltv_df['T'])
